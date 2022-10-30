@@ -1,0 +1,286 @@
+Exp 3 - web services
+
+THEORY:
+A web service is any piece of software that makes itself available over the
+internet and uses a standardized XML messaging system. XML is used to encode all
+communications to a web service. For example, a client invokes a web service by
+sending an XML message, then waits for a corresponding XML response. As all
+communication is in XML, web services are not tied to any one operating system or
+programming language—Java can talk with Perl; Windows applications can talk with
+Unix applications.
+Web services are XML-based information exchange systems that use the Internet for
+direct application-to-application interaction. These systems can include programs,
+objects, messages, or documents.
+There are three roles in web service architecture:
+i. Service Provider: From an architectural perspective, it is the platform that hosts
+the services.
+ii. Service Requestor: Service requestor is the application that is looking for and
+invoking or initiating an interaction with a service. The browser plays the
+requester role, driven by a consumer or a program without a user interface.
+iii. Service Registry: Service requestors find service and obtain binding information
+for services during development.
+Different process in web service Architecture:
+o Publication of service descriptions (Publish)
+o Finding of services descriptions (Find)
+o Invoking of service based on service descriptions (Bind)
+
+Step 1. File > New > Dynamic Web Project
+
+Step 2. 
+>> Name the project
+>> Dynamic web module version --> 2.5
+>> EAR Membership --> check
+>> Click "next"
+>> Click "finish"
+
+Step 3.
+>> Click on servers tab
+>> Define a new server --> tomcat 8.5
+>> Enter path of the folder
+>> add testproject
+
+Step 4. 
+>> right click on project name > new > class > name the class
+>> Enter the following code.
+
+public int add (int a, int b)
+{
+	return(a+b);
+}
+
+Step 5.
+>> Right click on server. Click start.
+
+Step 6.
+>> Right click on projectname. Click new > other > web service > web service.
+>> make the bar full. 
+>> enter service implementation something like: testProject1.addnums
+>> next > next > launch > finish.
+
+________________________________________________________________________________________________
+
+Exp 4 - RMI
+
+THEORY:
+Software system integration is essential where communication between
+different applications runningon different platform is needed. Suppose a
+system designed for payroll running with Human Resource System. In that
+case employees’ data need to be inserted in both systems. The system
+integration benefits a lot in these cases where data and services needed to
+be shared.
+The integration of different softwares written in different language and based
+on different platforms canbe tricky. In that situation a middleware is
+necessary to enable the communication between different softwares. The
+middleware enables the software system not only to share data but also share
+the services.
+
+Step 1. File > New > Project > Java Project > RMI_Demo > Finish.
+
+Step 2.
+>> Create class > IHello.java
+>> Code
+import java.rmi.*;
+public interface IHello extends Remote{
+	public String message() throws RemoteException;
+}
+>> Right click on file name > show in local terminal > terminal
+>> run > javac Ihello.java
+
+Step 3. 
+>> Create class > HelloImpl.java
+>> Code
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class HelloImpl extends UnicastRemoteObject
+implements IHello{
+	public HelloImpl() throws RemoteException {
+		//There is no action need in this moment.
+		}
+	public String message() throws RemoteException {
+		return ("Hello");
+		}
+	}
+>> Right click on file name > show in local terminal > terminal
+>> run > javac HelloImpl.java
+
+Step 4.
+>> Create class > HelloServer.java
+>> Code
+import java.rmi.*;
+
+public class HelloServer {
+	private static final String host = "localhost";
+	public static void main(String[] args) throws Exception {
+		//** Step 1
+		//** Declare a reference for the object that will be implemented
+		HelloImpl temp = new HelloImpl();
+		//** Step 2
+		//** Declare a string variable for holding the URL of the object's name
+		String rmiObjectName = "rmi://" + host + "/Hello";
+		//Step 3
+		//Binding the object reference to the object name.
+		Naming.rebind(rmiObjectName, temp);
+		//Step 4
+		//Tell to the user that the process is completed.
+		System.out.println("Binding complete...\n");
+		}
+	}
+>> Right click on file name > show in local terminal > terminal
+>> run > javac HelloServer.java
+
+Step 5. 
+>> Create class > HelloClient.java
+>> Code
+import java.rmi.ConnectException;
+import java.rmi.Naming;
+
+public class HelloClient
+{
+	private static final String host = "localhost";
+	public static void main(String[] args)
+	{
+		try
+		{
+			//We obtain a reference to the object from the registry and next,
+			//it will be typecasted into the most appropiate type.
+			IHello greeting_message = (IHello) Naming.lookup("rmi://"+ host + "/Hello");
+			//Next, we will use the above reference to invoke the remote
+			//object method.
+			System.out.println("Message received: " +greeting_message.message());
+			}
+		catch (ConnectException conEx)
+		{
+			System.out.println("Unable to connect to server!");
+			System.exit(1);
+			}
+		catch (Exception ex)
+		{
+			ex.printStackTrace();
+			System.exit(1);
+			}
+		}
+	}
+>> Right click on file name > show in local terminal > terminal
+>> run > javac HelloClient.java
+>> run > start rmiregistry
+>> run > java HelloClient.java
+
+________________________________________________________________________________________________
+
+Exp 5 - Middleware (without RMI)
+
+THEORY:
+Middleware is a more effective program that acts as bridge in between various applications and
+other databases otherwise tools. It is placed in between operating system and other applications
+which run on it. Middleware allows making better communication, application services,
+messaging, authentication, API management and management of data between different kinds of
+applications which help to exchange data.
+The connectors sit between the two APIs or you can say and the ends of the connectors are APIs.
+The connectors receive data from one app/solution and process it to make it understandable and
+accessible in the other app/solution, regardless of whether any direct form of integration was
+available in the two apps.
+Middleware is a potentially useful tool when building software connectors. First, it can be used
+to bridge thread, process and network boundaries. Second, it can provide pre-built protocols for
+exchanging data among software components or connectors. Finally, some middleware packages
+include features of software connectors such as filtering, routing, and broadcast of messages or
+other data.
+
+Step 1. Step 1. File > New > Project > Java Project > Middleware > Finish.
+
+Step 2. 
+>> Create class > Server.java
+>> Code
+package middleware;
+
+public class Server implements interfaceCalculator{
+	public int add(int a,int b){
+		return a+b;
+	}
+	public int sub(int a,int b){
+		return a-b;
+		}
+	}
+
+Step 3.
+>> Create class > InterfaceCalculator.java
+>> Code 
+package middleware;
+
+public interface interfaceCalculator{
+	public int add(int a,int b);
+	public int sub(int a,int b);
+}
+
+Step 4.
+>> Create class > Client.java
+>> Code
+package middleware;
+
+public class Client {
+	public static void main(String [] args)
+	{
+		interfaceCalculator i=new Server();
+		System.out.println(i.add(12,13));
+		System.out.println(i.sub(12,12));
+		}
+	}
+>> Save all files
+>> run client for the upper bar.
+
+________________________________________________________________________________________________
+
+Exp 6 - Wrapper Architecture
+
+THEORY:
+
+
+Step 1. Step 1. File > New > Project > Java Project > Wrapper > Finish.
+
+Step 2. 
+>> Create class > Sender.java
+>> Code
+package wrapper;
+
+import java.net.*;
+import java.util.*;
+public class Sender {
+	public static void main(String[] args) throws Exception{
+		Scanner scn=new Scanner(System.in);
+		System.out.println("Enter your Message:");
+		String str=scn.nextLine();
+		DatagramSocket ds=new DatagramSocket();
+		InetAddress ip=InetAddress.getByName("127.0.0.1");
+		DatagramPacket dp=new
+				DatagramPacket(str.getBytes(),str.length(),ip,3000);
+		ds.send(dp);
+		ds.close();
+		System.out.println("Message has been sent to Receiver Class Please Check:"+str);
+		}
+	}
+>> save file
+
+Step 3.
+>> Create class > Receiver.java
+>> Code
+package wrapper;
+
+import java.net.*;
+public class Receiver {
+	public static void main(String[] args) throws Exception{
+		System.out.println("Waiting for sender to send message");
+		DatagramSocket ds=new DatagramSocket(3000);
+		byte[] buf=new byte[1024];
+		DatagramPacket dp=new DatagramPacket(buf,1024);
+		ds.receive(dp);
+		String str=new String(dp.getData(),0,dp.getLength());
+		System.out.print(str);
+		ds.close();
+		System.out.println("Message received Successfully..");
+		}
+	}
+>> Save file
+
+Step 4.
+>> Run reciever
+>> Run sender

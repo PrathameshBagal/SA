@@ -1,5 +1,0 @@
-1. Change Perspective to ArchStudio
-2. File > New > Other > General > Project > Name > Finish
-3. Bottom Left Project Name > Right Click on project > New > Other > ArchStudio4 > Select option arch... > filename.xml > Finish.
-4. Outline Panel > Right Click Struture > New Structure.
-5. Double Click on struct file > rename > draw diagram in file
